@@ -1,5 +1,7 @@
 package com.dicoding.picodiploma.loginwithanimation.data.api
 
+import com.dicoding.picodiploma.loginwithanimation.data.response.FileUploadResponse
+import com.dicoding.picodiploma.loginwithanimation.data.response.GetStoryResponse
 import com.dicoding.picodiploma.loginwithanimation.data.response.RegisterResponse
 import com.dicoding.picodiploma.loginwithanimation.data.response.Response
 import com.dicoding.picodiploma.loginwithanimation.data.response.StoryResponse
@@ -41,10 +43,17 @@ interface ApiService {
     ): Call<Response>
 
     @GET("stories")
-    suspend fun getStories(
-        @Header("Authorization") token: String
-    ): StoryResponse
+    fun getStories(
+        @Query("page") page: Int = 1,
+        @Query("size") size: Int = 20
+    ): Call<GetStoryResponse>
 
+    @Multipart
+    @POST("stories")
+    suspend fun uploadImage(
+        @Part file: MultipartBody.Part,
+        @Part("description") description: RequestBody,
+    ): FileUploadResponse
 
 }
 

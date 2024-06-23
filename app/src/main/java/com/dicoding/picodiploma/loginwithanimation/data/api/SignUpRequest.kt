@@ -9,21 +9,12 @@ data class SignUpRequest(
     val password: String
 )
 
-data class SignUpResponse(
-    val error: Boolean,
-    val message: String
-)
-
 data class LoginResponse(
     val error: Boolean,
     val message: String,
     val loginResult: LoginResult
 )
 
-data class LoginResult(
-    val name: String,
-    val token: String
-)
 
 
 

@@ -2,17 +2,7 @@ package com.dicoding.picodiploma.loginwithanimation.data.api
 
 import com.google.gson.annotations.SerializedName
 
-data class ResponseDetail(
 
-	@field:SerializedName("error")
-	val error: Boolean? = null,
-
-	@field:SerializedName("message")
-	val message: String? = null,
-
-	@field:SerializedName("story")
-	val story: Story? = null
-)
 
 data class Story(
 

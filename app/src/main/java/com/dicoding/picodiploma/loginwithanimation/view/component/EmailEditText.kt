@@ -1,12 +1,12 @@
 package com.dicoding.picodiploma.loginwithanimation.view.component
 
-
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
+import android.util.Patterns
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
@@ -15,7 +15,7 @@ import com.dicoding.picodiploma.loginwithanimation.R
 
 class EmailEditText @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
-) : AppCompatEditText(context, attrs),View.OnTouchListener {
+) : AppCompatEditText(context, attrs), View.OnTouchListener {
 
     private var clearButtonImage: Drawable
 
@@ -23,7 +23,7 @@ class EmailEditText @JvmOverloads constructor(
         clearButtonImage = ContextCompat.getDrawable(context, R.drawable.ic_close_black) as Drawable
         setOnTouchListener(this)
 
-        addTextChangedListener(object: TextWatcher{
+        addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 //
             }
@@ -33,30 +33,34 @@ class EmailEditText @JvmOverloads constructor(
             }
 
             override fun afterTextChanged(s: Editable?) {
-                //
+                val email = s.toString()
+                if (!isValidEmail(email)) {
+                    error = context.getString(R.string.invalid_email_error)
+                }
             }
         })
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        hint = "Masukkan Nama"
+        hint = "Masukkan Email"
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
     }
 
-    private fun showClearButton(){
+    private fun showClearButton() {
         setButtonDrawables(endOfTheText = clearButtonImage)
     }
 
-    private fun hideClearButton(){
-        setButtonDrawables(clearButtonImage)
+    private fun hideClearButton() {
+        setButtonDrawables()
     }
 
     private fun setButtonDrawables(
-        startOfTheText  : Drawable? = null,
+        startOfTheText: Drawable? = null,
         topOfTheText: Drawable? = null,
-        endOfTheText: Drawable?? = null,
-        bottomOfTheText: Drawable? = null){
+        endOfTheText: Drawable? = null,
+        bottomOfTheText: Drawable? = null
+    ) {
         setCompoundDrawablesWithIntrinsicBounds(
             startOfTheText,
             topOfTheText,
@@ -65,24 +69,28 @@ class EmailEditText @JvmOverloads constructor(
         )
     }
 
+    private fun isValidEmail(email: CharSequence): Boolean {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
     override fun onTouch(v: View?, event: MotionEvent): Boolean {
-        if (compoundDrawables[2] != null){
+        if (compoundDrawables[2] != null) {
             val clearButtonStart: Float
             val clearButtonEnd: Float
             var isClearButtonClicked = false
-            if (layoutDirection == View.LAYOUT_DIRECTION_RTL){
+            if (layoutDirection == View.LAYOUT_DIRECTION_RTL) {
                 clearButtonEnd = (clearButtonImage.intrinsicWidth + paddingStart).toFloat()
-                when{
+                when {
                     event.x < clearButtonEnd -> isClearButtonClicked = true
                 }
-            }else{
+            } else {
                 clearButtonStart = (width - paddingEnd - clearButtonImage.intrinsicWidth).toFloat()
-                when{
-                    event.x < clearButtonStart -> isClearButtonClicked = true
+                when {
+                    event.x > clearButtonStart -> isClearButtonClicked = true
                 }
             }
-            if(isClearButtonClicked){
-                when(event.action){
+            if (isClearButtonClicked) {
+                when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
                         clearButtonImage = ContextCompat.getDrawable(context, R.drawable.ic_close_black) as Drawable
                         showClearButton()
@@ -90,7 +98,7 @@ class EmailEditText @JvmOverloads constructor(
                     }
                     MotionEvent.ACTION_UP -> {
                         clearButtonImage = ContextCompat.getDrawable(context, R.drawable.ic_close_black) as Drawable
-                        when{
+                        when {
                             text != null -> text?.clear()
                         }
                         hideClearButton()
@@ -99,7 +107,7 @@ class EmailEditText @JvmOverloads constructor(
                     else -> return false
                 }
             }
-            else return false
+            return false
         }
         return false
     }

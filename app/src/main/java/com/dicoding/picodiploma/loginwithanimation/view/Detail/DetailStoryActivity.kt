@@ -1,53 +1,31 @@
 package com.dicoding.picodiploma.loginwithanimation.view.Detail
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.dicoding.picodiploma.loginwithanimation.R
-import com.dicoding.picodiploma.loginwithanimation.data.pref.UserPreference
-import com.dicoding.picodiploma.loginwithanimation.data.pref.dataStore
-import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityDetailStoryBinding
-import com.dicoding.picodiploma.loginwithanimation.view.UserModelFactory
-import com.dicoding.picodiploma.loginwithanimation.view.UserViewModel
-import com.dicoding.picodiploma.loginwithanimation.view.login.LoginActivity
 
 class DetailStoryActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityDetailStoryBinding
+    private lateinit var detailName: TextView
+    private lateinit var detailPhoto: ImageView
+    private lateinit var detailDescription: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val name = intent.getStringExtra("name")
-        val photoUrl = intent.getStringExtra("photoUrl")
-        val description = intent.getStringExtra("description")
-        val pref = UserPreference.getInstance(application.dataStore)
-        val mainViewModel = ViewModelProvider(this, UserModelFactory(pref)).get(
-            UserViewModel::class.java
-        )
-
-        mainViewModel.getToken().observe(this){
-                token ->
-            if (token == "null"){
-                toLogin()
-            }
-            else{
-                setDetailStory(photoUrl, name, description)
-            }
-        }
-
         super.onCreate(savedInstanceState)
-        binding = ActivityDetailStoryBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-    }
+        setContentView(R.layout.activity_detail_story)
 
-    private fun setDetailStory(photoUrl: String?, name: String?, description: String?){
-        Glide.with(this).load(photoUrl).into(binding.imageView)
-        binding.textView.text = name
-        binding.textView2.text = description
-    }
+        detailName = findViewById(R.id.tv_detail_name)
+        detailPhoto = findViewById(R.id.iv_detail_photo)
+        detailDescription = findViewById(R.id.subtitle)
 
-    private fun toLogin(){
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
+        val name = intent.getStringExtra("tv_detail_name")
+        val photoUrl = intent.getStringExtra("iv_detail_photo")
+        val description = intent.getStringExtra("tv_detail_description")
+
+        detailName.text = name
+        detailDescription.text = description
+        Glide.with(this).load(photoUrl).into(detailPhoto)
     }
 }

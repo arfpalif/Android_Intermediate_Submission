@@ -1,29 +1,28 @@
 package com.dicoding.picodiploma.loginwithanimation.view.login
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.dicoding.picodiploma.loginwithanimation.data.api.ApiConfig
 import com.dicoding.picodiploma.loginwithanimation.data.api.LoginResponse
-import com.dicoding.picodiploma.loginwithanimation.data.api.LoginResult
-import com.dicoding.picodiploma.loginwithanimation.data.api.SignUpRequest
 import com.dicoding.picodiploma.loginwithanimation.data.pref.UserModel
-import com.dicoding.picodiploma.loginwithanimation.data.response.RegisterResponse
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityLoginBinding
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
-import com.dicoding.picodiploma.loginwithanimation.view.home.HomeActivity
 import com.dicoding.picodiploma.loginwithanimation.view.main.MainActivity
+import com.dicoding.picodiploma.loginwithanimation.view.signup.SignupActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,6 +40,27 @@ class LoginActivity : AppCompatActivity() {
         setupView()
         setupAction()
         checkSession()
+        playAnimation()
+    }
+
+    private fun playAnimation() {
+        ObjectAnimator.ofFloat(binding.imageView, View.TRANSLATION_X, -30f, 30f).apply {
+            duration = 6000
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.REVERSE
+        }.start()
+
+        val login = ObjectAnimator.ofFloat(binding.loginButton, View.ALPHA, 1f).setDuration(100)
+        val signup = ObjectAnimator.ofFloat(binding.signupButton, View.ALPHA, 1f).setDuration(100)
+        val title = ObjectAnimator.ofFloat(binding.titleTextView, View.ALPHA, 1f).setDuration(100)
+
+        val together = AnimatorSet().apply {
+            playTogether(login, signup)
+        }
+        AnimatorSet().apply {
+            playSequentially(title, together)
+            start()
+        }
     }
 
     private fun setupView() {
@@ -75,35 +95,47 @@ class LoginActivity : AppCompatActivity() {
         binding.loginButton.setOnClickListener {
             val email = binding.emailEditText.text.toString()
             val password = binding.passwordEditText.text.toString()
-            this.Login(email, password)
-        //viewModel.login(email, password)
+            if (email.isNotEmpty() && password.isNotEmpty() && binding.emailEditText.error == null) {
+                login(email, password)
+            } else {
+                Toast.makeText(this, "Please enter valid email and password", Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.signupButton.setOnClickListener {
+            startActivity(Intent(this, SignupActivity::class.java))
         }
     }
 
-    private fun Login( email: String, password: String) {
-        val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-        val client = ApiConfig.getApiService().login( email, password)
-        Log.d("tes123", client.toString())
-        client.enqueue(object : Callback<LoginResponse>{
+    private fun login(email: String, password: String) {
+        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+        val client = ApiConfig.getApiService().login(email, password)
+        Log.d("LoginActivity", client.toString())
+        client.enqueue(object : Callback<LoginResponse> {
             override fun onFailure(call: Call<LoginResponse>, t: Throwable) {
-                Toast.makeText(this@LoginActivity, t.message.toString(), Toast.LENGTH_SHORT)
+                Toast.makeText(this@LoginActivity, t.message.toString(), Toast.LENGTH_SHORT).show()
             }
+
             override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                Log.d("tes123", response.toString())
+                Log.d("LoginActivity", response.toString())
                 val responseBody = response.body()
-                val token = responseBody?.loginResult?.token.toString()
-                Log.d("Token", token)
-                if (token != null){
+                if (responseBody != null) {
+                    val token = responseBody.loginResult.token
+                    Log.d("Token", token)
+                    runBlocking {
+                        viewModel.saveSession(
+                            UserModel(
+                                email,
+                                token,
+                                isLogin = true
+                            )
+                        )
+                    }
                     startActivity(intent)
-                }
-                else{
-                    Toast.makeText(this@LoginActivity, responseBody?.message, Toast.LENGTH_SHORT).show()
+                    finish()
+                } else {
+                    Toast.makeText(this@LoginActivity, "Login failed: ${response.message()}", Toast.LENGTH_SHORT).show()
                 }
             }
         })
-
-
     }
-
-
 }

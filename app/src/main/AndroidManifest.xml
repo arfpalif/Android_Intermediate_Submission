@@ -11,10 +11,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.LoginWithAnimation">
         <activity
+            android:name=".view.uploadStory.CameraActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.uploadStory.UploadStoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.Detail.DetailStoryActivity"
             android:exported="false" />
-        <activity android:name=".view.home.HomeActivity"
-            android:exported="false"/>
+        <activity
+            android:name=".view.Home.HomeActivity"
+            android:exported="false" />
         <activity
             android:name=".view.welcome.WelcomeActivity"
             android:exported="false" />

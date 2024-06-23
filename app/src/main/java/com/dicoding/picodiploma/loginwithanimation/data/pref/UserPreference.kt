@@ -10,6 +10,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "session")
@@ -17,10 +18,12 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 class UserPreference private constructor(private val dataStore: DataStore<Preferences>) {
     private val USER_KEY = stringPreferencesKey("token")
     suspend fun saveSession(user: UserModel) {
-        dataStore.edit { preferences ->
-            preferences[EMAIL_KEY] = user.email
-            preferences[TOKEN_KEY] = user.token
-            preferences[IS_LOGIN_KEY] = true
+        runBlocking {
+            dataStore.edit { preferences ->
+                preferences[EMAIL_KEY] = user.email
+                preferences[TOKEN_KEY] = user.token
+                preferences[IS_LOGIN_KEY] = true
+            }
         }
     }
 

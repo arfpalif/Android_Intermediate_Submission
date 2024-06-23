@@ -1,6 +1,7 @@
-package com.dicoding.picodiploma.loginwithanimation.data
+package com.dicoding.picodiploma.loginwithanimation.data.repository
 
 import com.dicoding.picodiploma.loginwithanimation.data.api.ApiConfig
+import com.dicoding.picodiploma.loginwithanimation.data.api.ApiService
 import com.dicoding.picodiploma.loginwithanimation.data.api.LoginResponse
 import com.dicoding.picodiploma.loginwithanimation.data.pref.UserModel
 import com.dicoding.picodiploma.loginwithanimation.data.pref.UserPreference
@@ -38,6 +39,7 @@ class UserRepository private constructor(
         @Volatile
         private var instance: UserRepository? = null
         fun getInstance(
+            apiService: ApiService,
             userPreference: UserPreference
         ): UserRepository =
             instance ?: synchronized(this) {

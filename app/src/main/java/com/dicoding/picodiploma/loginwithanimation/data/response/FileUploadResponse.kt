@@ -1,4 +1,4 @@
-package com.dicoding.picodiploma.mycamera.data.api
+package com.dicoding.picodiploma.loginwithanimation.data.response
 
 import com.google.gson.annotations.SerializedName
 

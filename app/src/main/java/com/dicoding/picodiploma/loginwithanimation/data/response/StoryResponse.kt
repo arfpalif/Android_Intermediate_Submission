@@ -1,5 +1,7 @@
 package com.dicoding.picodiploma.loginwithanimation.data.response
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 data class StoryResponse(
@@ -7,7 +9,19 @@ data class StoryResponse(
 	@field:SerializedName("listStory")
 	val listStory: List<ListStoryItem>,
 )
+data class GetStoryResponse(
 
+	@field:SerializedName("listStory")
+	val listStory: List<ListStoryItem> = emptyList(),
+
+	@field:SerializedName("error")
+	val error: Boolean? = null,
+
+	@field:SerializedName("message")
+	val message: String? = null
+)
+
+@Entity(tableName = "list_Story_item")
 data class ListStoryItem(
 
 	@field:SerializedName("photoUrl")
@@ -23,13 +37,14 @@ data class ListStoryItem(
 	val description: String,
 
 	@field:SerializedName("lon")
-	val lon: Any,
+	val lon: Double,
 
+	@PrimaryKey
 	@field:SerializedName("id")
 	val id: String,
 
 	@field:SerializedName("lat")
-	val lat: Any
+	val lat: Double
 )
 
 data class Response(

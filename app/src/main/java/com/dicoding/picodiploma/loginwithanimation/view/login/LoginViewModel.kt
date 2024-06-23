@@ -17,7 +17,6 @@ class LoginViewModel(val userPreference: UserPreference) : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = ApiConfig.getApiService().login(email, password)
-                //val response = UserRepository.login(email, password)
             } catch (e: Exception) {
                 errorMessage.postValue(e.message)
             }

@@ -1,9 +1,9 @@
-package com.slavouz.storyapp.data
+package com.dicoding.picodiploma.loginwithanimation.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.slavouz.storyapp.data.response.ListStoryItem
-import com.slavouz.storyapp.data.retrofit.ApiService
+import com.dicoding.picodiploma.loginwithanimation.data.api.ApiService
+import com.dicoding.picodiploma.loginwithanimation.data.response.ListStoryItem
 import retrofit2.await
 
 class StoryPagingSource(private val apiService: ApiService) : PagingSource<Int, ListStoryItem>() {
