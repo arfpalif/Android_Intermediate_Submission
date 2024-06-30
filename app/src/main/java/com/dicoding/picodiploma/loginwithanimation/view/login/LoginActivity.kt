@@ -93,9 +93,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupAction() {
         binding.loginButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
-            val password = binding.passwordEditText.text.toString()
-            if (email.isNotEmpty() && password.isNotEmpty() && binding.emailEditText.error == null) {
+            val email = binding.edLoginEmail.text.toString()
+            val password = binding.edLoginPassword.text.toString()
+            if (email.isNotEmpty() && password.isNotEmpty() && binding.edLoginEmail.error == null) {
                 login(email, password)
             } else {
                 Toast.makeText(this, "Please enter valid email and password", Toast.LENGTH_SHORT).show()

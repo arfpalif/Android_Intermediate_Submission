@@ -25,6 +25,7 @@ import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityUploadSto
 import com.dicoding.picodiploma.loginwithanimation.utils.createCustomTempFile
 import com.dicoding.picodiploma.loginwithanimation.utils.getImageUri
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
+import com.dicoding.picodiploma.loginwithanimation.view.home.HomeActivity
 import com.dicoding.picodiploma.loginwithanimation.view.uploadStory.CameraActivity.Companion.CAMERAX_RESULT
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
@@ -162,6 +163,13 @@ class UploadStoryActivity : AppCompatActivity() {
                         )
                         showToast(successResponse.message)
                         showLoading(false)
+
+                        // Navigate back to HomeActivity and finish the current activity
+                        val intent = Intent(this@UploadStoryActivity, HomeActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                        finish()
+
                     } catch (e: HttpException) {
                         val errorBody = e.response()?.errorBody()?.string()
                         val errorResponse = Gson().fromJson(errorBody, FileUploadResponse::class.java)
@@ -172,6 +180,7 @@ class UploadStoryActivity : AppCompatActivity() {
             }
         } ?: showToast(getString(R.string.empty_image_warning))
     }
+
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE

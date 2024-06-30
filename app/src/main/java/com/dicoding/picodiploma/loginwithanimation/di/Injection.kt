@@ -1,7 +1,7 @@
 package com.dicoding.picodiploma.loginwithanimation.di
 
 import android.content.Context
-import com.dicoding.picodiploma.loginwithanimation.data.StoryDatabase
+import com.dicoding.picodiploma.loginwithanimation.data.database.StoryDatabase
 import com.dicoding.picodiploma.loginwithanimation.data.api.ApiConfig
 import com.dicoding.picodiploma.loginwithanimation.data.repository.StoryRepository
 import com.dicoding.picodiploma.loginwithanimation.data.repository.UserRepository

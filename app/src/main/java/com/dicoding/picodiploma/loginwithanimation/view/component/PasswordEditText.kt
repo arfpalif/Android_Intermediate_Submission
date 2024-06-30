@@ -32,14 +32,18 @@ class PasswordEditText @JvmOverloads constructor(
             }
 
             override fun afterTextChanged(s: Editable?) {
-                //
+                if (s != null && s.length < 8) {
+                    showError("Password harus memiliki minimal 8 karakter")
+                } else {
+                    hideError()
+                }
             }
         })
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        hint = "Masukkan Nama"
+        hint = "Masukkan Password"
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
     }
 
@@ -63,7 +67,14 @@ class PasswordEditText @JvmOverloads constructor(
             bottomOfTheText
         )
     }
-
+    private fun showError(errorMessage: String) {
+        error = errorMessage
+        // You can customize the appearance of the EditText to indicate an error state
+    }
+    private fun hideError() {
+        error = null
+        // Reset the appearance of the EditText if needed
+    }
     override fun onTouch(v: View?, event: MotionEvent): Boolean {
         if (compoundDrawables[2] != null){
             val clearButtonStart: Float

@@ -43,10 +43,10 @@ interface ApiService {
     ): Call<Response>
 
     @GET("stories")
-    fun getStories(
+    suspend fun getStories(
         @Query("page") page: Int = 1,
         @Query("size") size: Int = 20
-    ): Call<GetStoryResponse>
+    ): GetStoryResponse
 
     @Multipart
     @POST("stories")
@@ -54,6 +54,11 @@ interface ApiService {
         @Part file: MultipartBody.Part,
         @Part("description") description: RequestBody,
     ): FileUploadResponse
+
+    @GET("stories")
+    fun getStoriesWithLocation(
+        @Query("location") location: Int = 1
+    ): Call<GetStoryResponse>
 
 }
 

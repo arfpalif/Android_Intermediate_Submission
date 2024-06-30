@@ -1,9 +1,10 @@
-package com.dicoding.picodiploma.loginwithanimation.view.Home
+package com.dicoding.picodiploma.loginwithanimation.view.home
 
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
@@ -16,11 +17,12 @@ import com.dicoding.picodiploma.loginwithanimation.data.pref.UserPreference
 import com.dicoding.picodiploma.loginwithanimation.data.pref.dataStore
 import com.dicoding.picodiploma.loginwithanimation.data.response.GetStoryResponse
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityHomeBinding
+import com.dicoding.picodiploma.loginwithanimation.view.LoadingStateAdapter
 import com.dicoding.picodiploma.loginwithanimation.view.StoryViewModel
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
-import com.dicoding.picodiploma.loginwithanimation.view.home.HomeAdapter
 import com.dicoding.picodiploma.loginwithanimation.view.login.LoginActivity
 import com.dicoding.picodiploma.loginwithanimation.view.main.MainViewModel
+import com.dicoding.picodiploma.loginwithanimation.view.map.MapsActivity
 import com.dicoding.picodiploma.loginwithanimation.view.uploadStory.UploadStoryActivity
 import retrofit2.Call
 import retrofit2.Callback
@@ -79,9 +81,14 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setupAction() {
         binding.appBar.setOnMenuItemClickListener { menuItem ->
-            when(menuItem.itemId){
+            when (menuItem.itemId) {
                 R.id.logout_menu -> {
                     viewModel.logout()
+                    true
+                }
+                R.id.maps_menu -> {
+                    val intent = Intent(this, MapsActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 else -> false
@@ -97,37 +104,36 @@ class HomeActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.maps_menu -> {
+                val intent = Intent(this, MapsActivity::class.java)
+                startActivity(intent)
+                true
+            }
+            R.id.logout_menu -> {
+                viewModel.logout()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun showList(token: String) {
         val layoutManager = LinearLayoutManager(this)
         binding.rvItem.layoutManager = layoutManager
 
-        val client = ApiConfig.getApiService(token).getStories()
-        client.enqueue(object : Callback<GetStoryResponse> {
-            override fun onResponse(
-                call: Call<GetStoryResponse>,
-                response: Response<GetStoryResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        loadStory()
-                    } else {
-                        Toast.makeText(this@HomeActivity, "Error: ${response.message()}", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    Toast.makeText(this@HomeActivity, "Error: ${response.message()}", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<GetStoryResponse>, t: Throwable) {
-                Toast.makeText(this@HomeActivity, "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
         val adapter = HomeAdapter()
-        storyViewModel.story.observe(this) {
-            adapter.submitData(lifecycle, it)
+        binding.rvItem.adapter = adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                adapter.retry()
+            }
+        )
+        storyViewModel.story.observe(this) { pagingData ->
+            adapter.submitData(lifecycle, pagingData)
         }
     }
+
 
     private fun loadStory() {
         val adapter = HomeAdapter()

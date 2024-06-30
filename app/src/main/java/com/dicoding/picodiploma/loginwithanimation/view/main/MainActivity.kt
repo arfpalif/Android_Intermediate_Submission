@@ -12,10 +12,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.dicoding.picodiploma.loginwithanimation.data.pref.UserPreference
 import com.dicoding.picodiploma.loginwithanimation.data.pref.dataStore
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivityMainBinding
-import com.dicoding.picodiploma.loginwithanimation.view.Home.HomeActivity
 import com.dicoding.picodiploma.loginwithanimation.view.UserModelFactory
 import com.dicoding.picodiploma.loginwithanimation.view.UserViewModel
 import com.dicoding.picodiploma.loginwithanimation.view.ViewModelFactory
+import com.dicoding.picodiploma.loginwithanimation.view.home.HomeActivity
 import com.dicoding.picodiploma.loginwithanimation.view.login.LoginActivity
 
 class MainActivity : AppCompatActivity() {

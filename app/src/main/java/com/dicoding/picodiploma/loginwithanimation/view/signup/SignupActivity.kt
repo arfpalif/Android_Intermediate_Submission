@@ -14,11 +14,11 @@ import com.dicoding.picodiploma.loginwithanimation.data.api.ApiConfig
 import com.dicoding.picodiploma.loginwithanimation.data.api.SignUpRequest
 import com.dicoding.picodiploma.loginwithanimation.data.response.RegisterResponse
 import com.dicoding.picodiploma.loginwithanimation.databinding.ActivitySignupBinding
-import com.dicoding.picodiploma.loginwithanimation.view.Home.HomeActivity
 import com.dicoding.picodiploma.loginwithanimation.view.component.EmailEditText
 import com.dicoding.picodiploma.loginwithanimation.view.component.NameEditText
 import com.dicoding.picodiploma.loginwithanimation.view.component.PasswordEditText
 import com.dicoding.picodiploma.loginwithanimation.view.component.SignUpButton
+import com.dicoding.picodiploma.loginwithanimation.view.home.HomeActivity
 import com.dicoding.picodiploma.loginwithanimation.view.login.LoginActivity
 import retrofit2.Call
 import retrofit2.Callback
